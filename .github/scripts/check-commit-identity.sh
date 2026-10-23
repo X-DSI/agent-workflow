@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# check-commit-identity.sh — enforce PROTOCOL.md §11 on a range of commits.
+# check-commit-identity.sh — enforce PROTOCOL.md §13 on a range of commits.
 #
 # Usage: check-commit-identity.sh <base> <head>
 #   Checks every commit in <base>..<head>. Exits 1 if any commit
