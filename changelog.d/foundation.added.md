@@ -1,0 +1,4 @@
+- The agent-workflow protocol v0.1.0 (`docs/PROTOCOL.md`): roles, ADR and handoff formats, branch and PR rules, default-pass review with a self-modification gate, generated-content rules, changelog fragments, generated status, and commit identity rules.
+- `AGENTS.md`, `CLAUDE.md` and `CONTRIBUTING.md` so agents and humans follow the same rules.
+- ADRs recording the initial design decisions, and handoffs for the CI workflows, the copier template and the Agent Skill.
+- `commit-identity` reusable workflow: fails PRs with commits authored or committed by an `@anthropic.com` address, or carrying an AI `Co-Authored-By:` trailer.
