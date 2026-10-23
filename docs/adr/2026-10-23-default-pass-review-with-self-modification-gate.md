@@ -1,11 +1,11 @@
 ---
 title: Default-pass review, with a mandatory gate on self-modifying changes
-status: Accepted
+status: Superseded
 date: 2026-10-23
 deciders: [X-DSI]
 origin: web
 supersedes: null
-superseded_by: null
+superseded_by: 2026-10-23-code-owner-gating.md
 review: auto
 ---
 
