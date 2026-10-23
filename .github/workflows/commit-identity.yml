@@ -1,0 +1,59 @@
+# Reusable workflow: enforce commit identity rules (PROTOCOL.md §11).
+#
+# Call it from an adopting project's CI:
+#
+#   jobs:
+#     commit-identity:
+#       uses: X-DSI/agent-workflow/.github/workflows/commit-identity.yml@v0
+#       with:
+#         agent-workflow-ref: v0   # same ref as above
+#
+name: commit-identity
+
+on:
+  workflow_call:
+    inputs:
+      agent-workflow-ref:
+        description: Ref of X-DSI/agent-workflow to load the check script from. Use the same ref as in `uses:`.
+        type: string
+        default: main
+      forbidden-email-regex:
+        description: Extended regex for forbidden author/committer emails (case-insensitive).
+        type: string
+        default: '@anthropic\.com$'
+      forbidden-trailer-regex:
+        description: Extended regex for forbidden commit-message trailers (case-insensitive).
+        type: string
+        default: '^co-authored-by:.*(claude|anthropic|openai|codex|copilot|cursor|gemini)'
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Commit identity
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' || github.event_name == 'pull_request_target'
+    steps:
+      - name: Check out the pull request
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Check out agent-workflow scripts
+        uses: actions/checkout@v4
+        with:
+          repository: X-DSI/agent-workflow
+          ref: ${{ inputs.agent-workflow-ref }}
+          path: .agent-workflow
+          sparse-checkout: .github/scripts
+          persist-credentials: false
+
+      - name: Check commits in this pull request
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          FORBIDDEN_EMAIL_REGEX: ${{ inputs.forbidden-email-regex }}
+          FORBIDDEN_TRAILER_REGEX: ${{ inputs.forbidden-trailer-regex }}
+        run: bash .agent-workflow/.github/scripts/check-commit-identity.sh "$BASE_SHA" "$HEAD_SHA"

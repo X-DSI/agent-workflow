@@ -1,0 +1,16 @@
+# CI for agent-workflow itself. It calls its own reusable workflows, loading
+# their scripts from the pull request's head commit, so changes are tested
+# before they merge.
+name: ci
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  commit-identity:
+    uses: ./.github/workflows/commit-identity.yml
+    with:
+      agent-workflow-ref: ${{ github.event.pull_request.head.sha }}
