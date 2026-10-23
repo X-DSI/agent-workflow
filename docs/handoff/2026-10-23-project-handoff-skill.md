@@ -2,10 +2,13 @@
 title: The project-handoff Agent Skill
 status: open
 assignee: agent:any
-base_sha: 24db7b8
+base_sha: e0b8105
 adrs:
   - 2026-10-23-agents-md-and-agent-skills.md
   - 2026-10-23-pull-requests-as-transport.md
+  - 2026-10-23-process-tiers.md
+  - 2026-10-23-verifiable-acceptance-criteria.md
+  - 2026-10-23-untrusted-input.md
 plan_pr: 1
 impl_pr: null
 review: human
@@ -18,9 +21,11 @@ implement, report back.
 ## Scope
 **In:**
 - `skill/project-handoff/SKILL.md` — thin: locate and follow `docs/PROTOCOL.md`; procedures for
-  "start a planning session", "write an ADR", "write a handoff", "pick the next handoff",
-  "write the Outcome", "open a PR via the REST API".
-- `skill/project-handoff/templates/` — ADR, handoff and Outcome templates matching PROTOCOL §4–5.
+  "start a planning session", "pick the tier for a change", "write an ADR" (decided vs proposed
+  folder), "write a handoff" (every criterion with a `check:`), "pick the next handoff" (including
+  the `base_sha` diff), "write the Outcome" (CI evidence vs manual), "open a PR via the REST API",
+  and "handle untrusted input".
+- `skill/project-handoff/templates/` — ADR, handoff and Outcome templates matching PROTOCOL §5–6.
 - A protocol-version check: the skill states the protocol version it was written for and tells the
   agent to warn the user when `docs/PROTOCOL.md` reports a different version.
 - `make skill-zip` to build the claude.ai upload bundle (git-ignored output).
@@ -29,9 +34,10 @@ implement, report back.
 **Out:** slash commands and Claude Code plugin packaging (later, if needed).
 
 ## Acceptance criteria
-- [ ] The skill loads in Claude Code from a generated project.
-- [ ] The zipped skill uploads to claude.ai and triggers on "plan the next step" style requests.
-- [ ] Following the skill end to end produces files that pass ADR and handoff lint.
+- [ ] The skill loads in Claude Code from a generated project — check: manual
+- [ ] The zipped skill uploads to claude.ai and triggers on "plan the next step" style requests — check: manual
+- [ ] Following the skill end to end produces files that pass ADR and handoff lint — check: `adr-lint` and `handoff-lint` pass on a sample PR produced with the skill
+- [ ] The skill's templates match PROTOCOL §5–6 — check: `pytest tests/test_skill_templates.py`
 
 ## Constraints
 - The skill must not restate the protocol's rules; it points to them. One source of truth.

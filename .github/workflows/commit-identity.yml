@@ -1,4 +1,4 @@
-# Reusable workflow: enforce commit identity rules (PROTOCOL.md §11).
+# Reusable workflow: enforce commit identity rules (PROTOCOL.md §13).
 #
 # Call it from an adopting project's CI:
 #
